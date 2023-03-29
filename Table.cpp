@@ -167,7 +167,7 @@ void Table::setWidth(const Row &row)
     }
 }
 
-void Table::print() const
+void Table::displayHeaders() const
 {
     std::cout << "Table: " << FILE_NAME << '\n'
               << std::endl;
@@ -194,16 +194,15 @@ void Table::print() const
     }
 
     std::cout << VERTICAL_DELIM << std::endl;
+}
 
-    for (int i = 0; i < rows->getSize(); ++i)
+void Table::print() const
+{
+    displayHeaders();
+
+    for (int i = 0; i < this->rowsCount; ++i)
     {
-        for (int j = 0; j < this->columnTitles.getSize(); ++j)
-        {
-            std::cout << VERTICAL_DELIM << " ";
-            printStr(this->rows[i].getValues()[j].getValue());
-            mySetW(this->width - this->rows[i].getValues()[j].getSize() + 1);
-        }
-        std::cout << VERTICAL_DELIM << std::endl;
+        printLine(i);
     }
     std::cout << std::endl;
 }
@@ -219,22 +218,23 @@ void Table::changeTitleName(const char *newTitle, const int idx)
     setWidth(this->columnTitles);
 }
 
-void Table::changeCellValue(const int rowNumber, const char *columnTitle, const char *newValue) // working
+void Table::changeCellValue(const int rowNumber, const char *columnTitle, const char *newValue)
 {
     if (!columnTitle || myStrLen(columnTitle) >= MAX_FIELD_SIZE || rowNumber < 0 || rowNumber > this->rowsCount)
     {
         return;
     }
 
-    int size = this->columnTitles.getSize();
+    int columnIdx = getColumnIdx(columnTitle);
 
-    for (int i = 0; i < size; ++i)
+    if (columnIdx < 0)
     {
-        if (myStrCmp(this->columnTitles.getValues()[i].getValue(), columnTitle))
-        {
-            this->rows[rowNumber - 1].setValue(newValue, i);
-        }
+        return;
     }
+
+    this->rows[rowNumber - 1].setValue(newValue, columnIdx);
+
+    setWidth(this->rows[rowNumber - 1]);
 }
 
 void Table::changeCellValue(const char *columnTitle, const char *changeValue, const char *newValue)
@@ -246,17 +246,73 @@ void Table::changeCellValue(const char *columnTitle, const char *changeValue, co
 
     int size = this->columnTitles.getSize();
 
+    int columnIdx = getColumnIdx(columnTitle);
+
+    if (columnIdx < 0)
+    {
+        return;
+    }
+
+    for (int j = 0; j < this->rowsCount; ++j)
+    {
+        if (myStrCmp(this->rows[j].getValues()[columnIdx].getValue(), changeValue))
+        {
+            this->rows[j].setValue(newValue, columnIdx);
+            setWidth(this->rows[j]);
+
+            return;
+        }
+    }
+}
+
+int Table::getColumnIdx(const char *columnTitle) const
+{
+    int size = this->columnTitles.getSize();
+
     for (int i = 0; i < size; ++i)
     {
         if (myStrCmp(this->columnTitles.getValues()[i].getValue(), columnTitle))
         {
-            for (int j = 0; j < this->rowsCount; ++j)
-            {
-                if (myStrCmp(this->rows[j].getValues()[i].getValue(), changeValue))
-                {
-                    this->rows[j].setValue(newValue, i);
-                }
-            }
+            return i;
         }
     }
+    return -1;
+}
+
+void Table::printLine(const int rowIdx) const
+{
+
+    for (int i = 0; i < this->columnTitles.getSize(); ++i)
+    {
+        std::cout << VERTICAL_DELIM << " ";
+        printStr(this->rows[rowIdx].getValues()[i].getValue());
+        mySetW(this->width - this->rows[rowIdx].getValues()[i].getSize() + 1);
+    }
+    std::cout << VERTICAL_DELIM << std::endl;
+}
+
+void Table::displayWhere(const char *columnTitle, const char *rowValue)
+{
+    if (!columnTitle || myStrLen(columnTitle) >= MAX_FIELD_SIZE || myStrLen(rowValue) >= MAX_FIELD_SIZE)
+    {
+        return;
+    }
+
+    displayHeaders();
+
+    int columnIdx = getColumnIdx(columnTitle);
+
+    if (columnIdx < 0)
+    {
+        return;
+    }
+
+    for (int i = 0; i < this->rowsCount; ++i)
+    {
+        if (myStrCmp(this->rows[i].getValues()[columnIdx].getValue(), rowValue))
+        {
+            printLine(i);
+        }
+    }
+    std::cout << std::endl;
 }

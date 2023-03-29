@@ -12,11 +12,14 @@ class Table
     int width;
 
     void setWidth(const Row &);
+    void displayHeaders() const;
+    int getColumnIdx(const char *) const;
+    void printLine(const int) const;
 
 public:
     Table();
 
-    bool loadFromFile();
+    bool loadFromFile(); // not Implemented
     void saveToFile() const;
     void print() const;
     void addRow(const Row &);
@@ -25,4 +28,5 @@ public:
     void changeTitleName(const char *, const int);
     void changeCellValue(const int, const char *, const char *);
     void changeCellValue(const char *, const char *, const char *);
+    void displayWhere(const char *, const char *);
 };

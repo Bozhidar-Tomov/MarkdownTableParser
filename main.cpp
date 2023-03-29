@@ -2,6 +2,8 @@
 #include <iostream>
 #include "Table.h"
 
+// TODO: alignment, selection->done, safe to file
+
 int main()
 {
     Table table;
@@ -18,13 +20,13 @@ int main()
 
     table.print();
 
-    table.changeTitleName("new!", 1);
+    table.changeTitleName("Hello world!", 1);
+    std::cout << "===============\n";
     table.print();
-    table.changeCellValue(1, "new!", "ROW1");
+    table.changeCellValue(1, "Hello world!", "Hello world LONG!");
+    std::cout << "===============\n";
     table.print();
-    table.changeCellValue("Syntax", "Paragraph", "VALUE");
-
-    table.print();
-
-    int stop = 0;
+    // table.changeCellValue("Syntax", "Paragraph", "VALUE");
+    std::cout << "===============\n";
+    table.displayWhere("Hello world!", "Text");
 }
