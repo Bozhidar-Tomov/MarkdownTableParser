@@ -20,14 +20,12 @@ Row parseLine(std::stringstream &lineStream)
     Row row;
     char value[MAX_FIELD_SIZE + 1];
 
-    lineStream.seekg(1, std::ios::beg);
-
     if (!lineStream)
     {
         return row;
     }
 
-    lineStream.seekg(1, std::ios::cur);
+    lineStream.seekg(1, std::ios::beg);
 
     while (lineStream.getline(value, MAX_FIELD_SIZE + 1, VERTICAL_DELIM))
     {
@@ -78,7 +76,9 @@ void parseIndentationLine(std::stringstream &lineStream, Table *table)
         return;
     }
 
-    char value[MAX_FIELD_SIZE + 1];
+    lineStream.seekg(1, std::ios::beg);
+
+    char value[MAX_FIELD_SIZE + 1] = {'\0'};
 
     int idx = 0;
 
@@ -284,9 +284,47 @@ void Table::printLine(const int rowIdx) const
 
     for (int i = 0; i < this->columnTitles.getSize(); ++i)
     {
-        std::cout << VERTICAL_DELIM << " ";
-        printStr(this->rows[rowIdx].getValues()[i].getValue());
-        mySetW(this->width - this->rows[rowIdx].getValues()[i].getSize() + 1);
+        std::cout << VERTICAL_DELIM;
+        if (this->indentation[i] == Indentation::left)
+        {
+            std::cout << " ";
+            printStr(this->rows[rowIdx].getValues()[i].getValue());
+            mySetW(this->width - this->rows[rowIdx].getValues()[i].getSize() + 1);
+            continue;
+        }
+        if (this->indentation[i] == Indentation::middle)
+        {
+            int valueSize = this->rows[rowIdx].getValues()[i].getSize();
+
+            int diff = (this->width - valueSize + 2);
+
+            bool extraSpace = false;
+
+            if (diff % 2 != 0)
+            {
+                extraSpace = true;
+                --diff;
+            }
+
+            diff /= 2;
+
+            if (diff == 0)
+            {
+                diff = 2;
+            }
+
+            mySetW(diff + extraSpace);
+            printStr(this->rows[rowIdx].getValues()[i].getValue());
+            mySetW(diff);
+            continue;
+        }
+        if (this->indentation[i] == Indentation::right)
+        {
+            mySetW(this->width - this->rows[rowIdx].getValues()[i].getSize() + 1);
+            printStr(this->rows[rowIdx].getValues()[i].getValue());
+            std::cout << " ";
+            continue;
+        }
     }
     std::cout << VERTICAL_DELIM << std::endl;
 }

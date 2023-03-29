@@ -26,7 +26,7 @@ int main()
     table.changeCellValue(1, "Hello world!", "Hello world LONG!");
     std::cout << "===============\n";
     table.print();
-    // table.changeCellValue("Syntax", "Paragraph", "VALUE");
+    table.changeCellValue("body", "b", "VALUE");
     std::cout << "===============\n";
     table.displayWhere("Hello world!", "Text");
 }
