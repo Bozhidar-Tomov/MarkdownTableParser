@@ -23,4 +23,6 @@ public:
     void addTitles(const Row &);
     void addIndent(const Indentation &, const int);
     void changeTitleName(const char *, const int);
+    void changeCellValue(const int, const char *, const char *);
+    void changeCellValue(const char *, const char *, const char *);
 };

@@ -18,6 +18,6 @@ public:
     void removeValue();
     void removeValue(int);
     int getSize() const;
-    void setValue(const char *title, const int);
+    void setValue(const char *, const int);
     const Cell *getValues() const;
 };

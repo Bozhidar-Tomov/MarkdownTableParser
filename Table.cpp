@@ -40,6 +40,7 @@ Row parseLine(std::stringstream &lineStream)
     return row;
 }
 
+// Some external resources are used in the implementation of this function!
 Indentation getIndentation(char *line)
 {
     int i = 0;
@@ -204,16 +205,58 @@ void Table::print() const
         }
         std::cout << VERTICAL_DELIM << std::endl;
     }
+    std::cout << std::endl;
 }
 
-void Table::changeTitleName(const char *title, const int idx)
+void Table::changeTitleName(const char *newTitle, const int idx)
 {
     if (idx < 0 || idx >= this->columnTitles.getSize())
     {
         return;
     }
-
-    this->columnTitles.setValue(title, idx);
+    this->columnTitles.setValue(newTitle, idx);
 
     setWidth(this->columnTitles);
+}
+
+void Table::changeCellValue(const int rowNumber, const char *columnTitle, const char *newValue) // working
+{
+    if (!columnTitle || myStrLen(columnTitle) >= MAX_FIELD_SIZE || rowNumber < 0 || rowNumber > this->rowsCount)
+    {
+        return;
+    }
+
+    int size = this->columnTitles.getSize();
+
+    for (int i = 0; i < size; ++i)
+    {
+        if (myStrCmp(this->columnTitles.getValues()[i].getValue(), columnTitle))
+        {
+            this->rows[rowNumber - 1].setValue(newValue, i);
+        }
+    }
+}
+
+void Table::changeCellValue(const char *columnTitle, const char *changeValue, const char *newValue)
+{
+    if (!columnTitle || myStrLen(columnTitle) >= MAX_FIELD_SIZE || myStrLen(changeValue) >= MAX_FIELD_SIZE)
+    {
+        return;
+    }
+
+    int size = this->columnTitles.getSize();
+
+    for (int i = 0; i < size; ++i)
+    {
+        if (myStrCmp(this->columnTitles.getValues()[i].getValue(), columnTitle))
+        {
+            for (int j = 0; j < this->rowsCount; ++j)
+            {
+                if (myStrCmp(this->rows[j].getValues()[i].getValue(), changeValue))
+                {
+                    this->rows[j].setValue(newValue, i);
+                }
+            }
+        }
+    }
 }

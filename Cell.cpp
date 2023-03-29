@@ -24,10 +24,10 @@ void Cell::setValue(const char *value)
     {
         return;
     }
-    
+
     int size = myStrLen(value);
 
-    if (size >= MAX_FIELD_SIZE + 1)
+    if (size >= MAX_FIELD_SIZE)
     {
         return;
     }

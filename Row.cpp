@@ -88,7 +88,11 @@ const Cell *Row::getValues() const
     return this->values;
 }
 
-void Row::setValue(const char *title, const int idx)
+void Row::setValue(const char *value, const int idx)
 {
-    this->values->setValue(title);
+    if (idx < 0 || idx >= this->size)
+    {
+        return;
+    }
+    this->values[idx].setValue(value);
 }
