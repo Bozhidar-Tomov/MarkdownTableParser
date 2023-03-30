@@ -126,6 +126,19 @@ bool Table::loadFromFile()
     return true;
 }
 
+bool Table::saveToFile() const
+{
+    std::ofstream file(FILE_NAME);
+
+    if (!file.is_open())
+    {
+        return false;
+    }
+
+    printTo(file, true);
+    return true;
+}
+
 void Table::addRow(const Row &row)
 {
     if (this->rowsCount >= MAX_ROW_COUNT)
@@ -167,10 +180,13 @@ void Table::setWidth(const Row &row)
     }
 }
 
-void Table::displayHeaders() const
+void Table::displayHeaders(std::ostream &oStream, bool isFileStream) const
 {
-    std::cout << "Table: " << FILE_NAME << '\n'
-              << std::endl;
+    if (!isFileStream)
+    {
+        oStream << "Table: " << FILE_NAME << '\n'
+                << std::endl;
+    }
 
     if (this->width <= 0 || this->rowsCount <= 0)
     {
@@ -179,32 +195,52 @@ void Table::displayHeaders() const
 
     for (int i = 0; i < this->columnTitles.getSize(); ++i)
     {
-        std::cout << VERTICAL_DELIM << " ";
-        printStr(this->columnTitles.getValues()[i].getValue());
-        mySetW(this->width - this->columnTitles.getValues()[i].getSize() + 1);
+        oStream << VERTICAL_DELIM << " ";
+        printStr(this->columnTitles.getValues()[i].getValue(), oStream);
+        mySetW(this->width - this->columnTitles.getValues()[i].getSize() + 1, DEFAULT_CHAR, oStream);
     }
 
-    std::cout << VERTICAL_DELIM << std::endl;
+    oStream << VERTICAL_DELIM << std::endl;
 
     for (int i = 0; i < this->columnTitles.getSize(); ++i)
     {
-        std::cout << VERTICAL_DELIM << " ";
-        mySetW(this->width, HORIZONTAL_DELIM);
-        std::cout << " ";
+        oStream << VERTICAL_DELIM << " ";
+
+        if (isFileStream)
+        {
+            if (this->indentation[i] == Indentation::left || this->indentation[i] == Indentation::middle)
+            {
+                oStream << ":";
+            }
+        }
+
+        mySetW(this->width, HORIZONTAL_DELIM, oStream);
+
+        if (isFileStream)
+        {
+            if (this->indentation[i] == Indentation::right || this->indentation[i] == Indentation::middle)
+            {
+                oStream << ":";
+            }
+        }
+        oStream << " ";
     }
 
-    std::cout << VERTICAL_DELIM << std::endl;
+    oStream << VERTICAL_DELIM << std::endl;
 }
 
-void Table::print() const
+void Table::printTo(std::ostream &oStream, bool isFileStream) const
 {
-    displayHeaders();
+    displayHeaders(oStream, isFileStream);
 
     for (int i = 0; i < this->rowsCount; ++i)
     {
-        printLine(i);
+        printLine(i, oStream);
     }
-    std::cout << std::endl;
+    if (!isFileStream)
+    {
+        oStream << std::endl;
+    }
 }
 
 void Table::changeTitleName(const char *newTitle, const int idx)
@@ -279,17 +315,16 @@ int Table::getColumnIdx(const char *columnTitle) const
     return -1;
 }
 
-void Table::printLine(const int rowIdx) const
+void Table::printLine(const int rowIdx, std::ostream &oStream) const
 {
-
     for (int i = 0; i < this->columnTitles.getSize(); ++i)
     {
-        std::cout << VERTICAL_DELIM;
+        oStream << VERTICAL_DELIM;
         if (this->indentation[i] == Indentation::left)
         {
-            std::cout << " ";
-            printStr(this->rows[rowIdx].getValues()[i].getValue());
-            mySetW(this->width - this->rows[rowIdx].getValues()[i].getSize() + 1);
+            oStream << " ";
+            printStr(this->rows[rowIdx].getValues()[i].getValue(), oStream);
+            mySetW(this->width - this->rows[rowIdx].getValues()[i].getSize() + 1, DEFAULT_CHAR, oStream);
             continue;
         }
         if (this->indentation[i] == Indentation::middle)
@@ -313,20 +348,21 @@ void Table::printLine(const int rowIdx) const
                 diff = 2;
             }
 
-            mySetW(diff + extraSpace);
-            printStr(this->rows[rowIdx].getValues()[i].getValue());
-            mySetW(diff);
+            mySetW(diff + extraSpace, DEFAULT_CHAR, oStream);
+            printStr(this->rows[rowIdx].getValues()[i].getValue(), oStream);
+            mySetW(diff, DEFAULT_CHAR, oStream);
             continue;
         }
         if (this->indentation[i] == Indentation::right)
         {
-            mySetW(this->width - this->rows[rowIdx].getValues()[i].getSize() + 1);
-            printStr(this->rows[rowIdx].getValues()[i].getValue());
-            std::cout << " ";
+            mySetW(this->width - this->rows[rowIdx].getValues()[i].getSize() + 1, DEFAULT_CHAR, oStream);
+            printStr(this->rows[rowIdx].getValues()[i].getValue(), oStream);
+            oStream << " ";
             continue;
         }
+        break;
     }
-    std::cout << VERTICAL_DELIM << std::endl;
+    oStream << VERTICAL_DELIM << std::endl;
 }
 
 void Table::displayWhere(const char *columnTitle, const char *rowValue)
@@ -336,7 +372,7 @@ void Table::displayWhere(const char *columnTitle, const char *rowValue)
         return;
     }
 
-    displayHeaders();
+    displayHeaders(std::cout, false);
 
     int columnIdx = getColumnIdx(columnTitle);
 
@@ -349,7 +385,7 @@ void Table::displayWhere(const char *columnTitle, const char *rowValue)
     {
         if (myStrCmp(this->rows[i].getValues()[columnIdx].getValue(), rowValue))
         {
-            printLine(i);
+            printLine(i, std::cout);
         }
     }
     std::cout << std::endl;

@@ -7,3 +7,4 @@ const char FILE_NAME[] = "table.dat";
 const char VERTICAL_DELIM = '|';
 const char HORIZONTAL_DELIM = '-';
 const char INDENT_DELIM = ':';
+const char DEFAULT_CHAR = ' ';

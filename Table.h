@@ -2,6 +2,7 @@
 #include "constants.h"
 #include "Row.h"
 #include "Indentation.h"
+#include <ostream>
 
 class Table
 {
@@ -15,8 +16,8 @@ public:
     Table();
 
     bool loadFromFile();
-    void saveToFile() const;
-    void print() const;
+    bool saveToFile() const;
+    void printTo(std::ostream &, bool) const;
     void addRow(const Row &);
     void addTitles(const Row &);
     void addIndent(const Indentation &, const int);
@@ -27,7 +28,7 @@ public:
 
 private:
     void setWidth(const Row &);
-    void displayHeaders() const;
+    void displayHeaders(std::ostream &oStream, bool) const;
     int getColumnIdx(const char *) const;
-    void printLine(const int) const;
+    void printLine(const int, std::ostream &) const;
 };

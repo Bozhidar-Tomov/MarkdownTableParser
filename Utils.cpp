@@ -72,7 +72,7 @@ int strToInt(const char *str)
     return x;
 }
 
-void printStr(const char *str)
+void printStr(const char *str, std::ostream &oStream)
 {
     if (!str)
     {
@@ -81,15 +81,15 @@ void printStr(const char *str)
 
     while (*str)
     {
-        std::cout << *str++;
+        oStream << *str++;
     }
 }
 
-void mySetW(const int w, char ch = ' ')
+void mySetW(const int w, char ch, std::ostream &oStream)
 {
     for (int i = 0; i < w; ++i)
     {
-        std::cout << ch;
+        oStream << ch;
     }
 }
 
