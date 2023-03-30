@@ -59,6 +59,7 @@ bool myStrCmp(const char *s1, const char *s2)
     return *s1 - *s2 == 0;
 }
 
+// only positive numbers!
 int strToInt(const char *str)
 {
     int x = 0;
@@ -69,7 +70,7 @@ int strToInt(const char *str)
         ++str;
     }
 
-    return x;
+    return *str == '\0' ? x : -1;
 }
 
 void printStr(const char *str, std::ostream &oStream)

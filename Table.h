@@ -15,16 +15,17 @@ class Table
 public:
     Table();
 
-    bool loadFromFile();
-    bool saveToFile() const;
+    bool loadFromFile(const char *);
+    bool saveToFile(const char *) const;
     void printTo(std::ostream &, bool) const;
     void addRow(const Row &);
     void addTitles(const Row &);
     void addIndent(const Indentation &, const int);
-    void changeTitleName(const char *, const int);
+    void changeTitleName(const char *, const char *);
     void changeCellValue(const int, const char *, const char *);
     void changeCellValue(const char *, const char *, const char *);
     void displayWhere(const char *, const char *);
+    int getColumnCount() const;
 
 private:
     void setWidth(const Row &);

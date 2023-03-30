@@ -89,9 +89,9 @@ void parseIndentationLine(std::stringstream &lineStream, Table *table)
     }
 }
 
-bool Table::loadFromFile()
+bool Table::loadFromFile(const char *fileName)
 {
-    std::ifstream file(FILE_NAME);
+    std::ifstream file(fileName);
 
     if (!file.is_open())
     {
@@ -126,9 +126,9 @@ bool Table::loadFromFile()
     return true;
 }
 
-bool Table::saveToFile() const
+bool Table::saveToFile(const char *fileName) const
 {
-    std::ofstream file(FILE_NAME);
+    std::ofstream file(fileName);
 
     if (!file.is_open())
     {
@@ -243,8 +243,10 @@ void Table::printTo(std::ostream &oStream, bool isFileStream) const
     }
 }
 
-void Table::changeTitleName(const char *newTitle, const int idx)
+void Table::changeTitleName(const char *title, const char *newTitle)
 {
+    int idx = getColumnIdx(title);
+
     if (idx < 0 || idx >= this->columnTitles.getSize())
     {
         return;
@@ -389,4 +391,9 @@ void Table::displayWhere(const char *columnTitle, const char *rowValue)
         }
     }
     std::cout << std::endl;
+}
+
+int Table::getColumnCount() const
+{
+    return this->columnTitles.getSize();
 }
