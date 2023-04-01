@@ -13,11 +13,6 @@ Cell::Cell(const char *value)
     setValue(value);
 }
 
-// bool Cell::operator==(const Cell &other) const
-// {
-//     return myStrCmp(this->value, other.value) && this->size == other.size;
-// }
-
 void Cell::setValue(const char *value)
 {
     if (!value)

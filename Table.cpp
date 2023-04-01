@@ -1,6 +1,5 @@
 #include "Table.h"
 #include "Utils.h"
-#include "Indentation.h"
 #include "constants.h"
 #include <iostream>
 #include <fstream>
@@ -184,8 +183,7 @@ void Table::displayHeaders(std::ostream &oStream, bool isFileStream) const
 {
     if (!isFileStream)
     {
-        oStream << "Table: " << FILE_NAME << '\n'
-                << std::endl;
+        oStream << "Table:" << std::endl;
     }
 
     if (this->width <= 0 || this->rowsCount <= 0)

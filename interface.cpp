@@ -21,6 +21,7 @@ void run()
 
     while (true)
     {
+        // clearing std::cin input buffer
         std::cin.clear();
         fflush(stdin);
 

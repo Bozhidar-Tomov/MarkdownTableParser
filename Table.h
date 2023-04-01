@@ -1,14 +1,20 @@
 #pragma once
 #include "constants.h"
 #include "Row.h"
-#include "Indentation.h"
 #include <ostream>
+
+enum class Indentation
+{
+    left,
+    middle,
+    right,
+};
 
 class Table
 {
     Row rows[MAX_ROW_COUNT];
     Row columnTitles;
-    Indentation indentation[MAX_ROW_COUNT];
+    Indentation indentation[MAX_COLUMN_COUNT];
     int rowsCount;
     int width;
 
