@@ -24,18 +24,22 @@ public:
     bool loadFromFile(const char *);
     bool saveToFile(const char *) const;
     void printTo(std::ostream &, bool) const;
+
     void addRow(const Row &);
     void addTitles(const Row &);
     void addIndent(const Indentation &, const int);
+
     void changeTitleName(const char *, const char *);
     void changeCellValue(const int, const char *, const char *);
     void changeCellValue(const char *, const char *, const char *);
+
     void displayWhere(const char *, const char *);
     int getColumnCount() const;
 
 private:
-    void setWidth(const Row &);
-    void displayHeaders(std::ostream &oStream, bool) const;
     int getColumnIdx(const char *) const;
+    void setWidth(const Row &);
+
+    void displayHeaders(std::ostream &oStream, bool) const;
     void printLine(const int, std::ostream &) const;
 };

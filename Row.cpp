@@ -13,6 +13,16 @@ Row::Row(const Cell *values, int size)
     setRow(values, size);
 }
 
+int Row::getSize() const
+{
+    return this->size;
+}
+
+const Cell *Row::getValues() const
+{
+    return this->values;
+}
+
 void Row::setRow(const Cell *values, int size)
 {
     if (values == nullptr || size >= MAX_FIELD_SIZE)
@@ -27,6 +37,15 @@ void Row::setRow(const Cell *values, int size)
     {
         this->values[i] = values[i];
     }
+}
+
+void Row::setValue(const char *value, const int idx)
+{
+    if (idx < 0 || idx >= this->size)
+    {
+        return;
+    }
+    this->values[idx].setValue(value);
 }
 
 // append
@@ -76,23 +95,4 @@ void Row::removeValue(int idx)
     }
 
     --this->size;
-}
-
-int Row::getSize() const
-{
-    return this->size;
-}
-
-const Cell *Row::getValues() const
-{
-    return this->values;
-}
-
-void Row::setValue(const char *value, const int idx)
-{
-    if (idx < 0 || idx >= this->size)
-    {
-        return;
-    }
-    this->values[idx].setValue(value);
 }

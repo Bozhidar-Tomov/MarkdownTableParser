@@ -12,12 +12,15 @@ public:
     Row();
     Row(const Cell *, int);
 
+    int getSize() const;
+    const Cell *getValues() const;
+
     void setRow(const Cell *, int);
+    void setValue(const char *, const int);
+
     void addValue(const Cell &);
     void addValue(const Cell &, int);
+
     void removeValue();
     void removeValue(int);
-    int getSize() const;
-    void setValue(const char *, const int);
-    const Cell *getValues() const;
 };

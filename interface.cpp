@@ -11,7 +11,7 @@ void run()
 
     std::cout << "1) load <file name>\n";
     std::cout << "2) changeColumn <column> <new value>\n";
-    std::cout << "3) addRow <column number> <column> ... <column> (max " << MAX_COLUMN_COUNT << ")\n";
+    std::cout << "3) addRow <column> ... <column> (max " << MAX_COLUMN_COUNT << ")\n";
     std::cout << "4) changeRow:\n\t<row number> <column> <new value>\n\t<column> <cell value> <new value>\n";
     std::cout << "5) save\n";
     std::cout << "6) print\n";
